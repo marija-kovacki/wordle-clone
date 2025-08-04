@@ -1,92 +1,196 @@
 import './style.css'
-import { words } from './words'
+import { dictionary } from './words'
 
-let currentLetter = 0
-let currentRow = 0
-let entries = []
-let gameEnd = false
+const message = document.createElement('div')
+message.className = 'game-msg'
+const mainContainer = document.getElementById('app')
+const btn = document.createElement('button')
 
-const letters = document.querySelectorAll('.letter')
-const rows = document.querySelectorAll('.row')
-const keyboardLetters = document.querySelectorAll('.keyboard_letter')
-const backspaceBtn = document.querySelector('#backspace')
-const enterBtn = document.querySelector('#enter')
-let pressedKeyboard, keyboardAttr
+function handleModal() {
+  let overlay = document.querySelector('.dark-overlay')
+  let closeBtn = document.querySelector('.close-btn')
+  const modal = document.querySelector('.modal')
 
-const wordOfDay = words[Math.floor(Math.random() * words.length)].toUpperCase()
+  let selectors = [overlay, closeBtn]
 
-const mainContainer = document.querySelector('#app')
-const statusElement = document.createElement('div')
-statusElement.classList.add('status-element')
+  selectors.forEach((selector) =>
+    selector.addEventListener('click', function () {
+      modal.classList.add('hidden')
+      overlay.classList.add('hidden')
+    })
+  )
+}
 
-console.log(wordOfDay)
+handleModal()
 
-document.addEventListener('keydown', keyPress)
+const state = {
+  secret: dictionary[Math.floor(Math.random() * dictionary.length)],
+  grid: Array(6)
+    .fill()
+    .map(() => Array(5).fill('')),
+  currentRow: 0,
+  currentCol: 0,
+  gameOver: false,
+}
 
-// if (rows[currentRow] > currentRow) {
-//   gameEnd = true
-//   return
-// }
-
-function keyPress(e) {
-  let pressed = e.key.toUpperCase()
-
-  //Test and enter letters
-  if (/^[a-z]$/i.test(pressed)) {
-    letters[currentLetter].innerHTML = pressed
-    entries.push(pressed)
-    currentLetter++
+function updateGrid() {
+  for (let i = 0; i < state.grid.length; i++) {
+    for (let j = 0; j < state.grid[i].length; j++) {
+      const box = document.getElementById(`box${i}${j}`)
+      box.textContent = state.grid[i][j]
+    }
   }
+}
 
-  if (e.key === 'Enter') {
-    console.log(currentRow)
-    const enteredWord = entries.join('').toUpperCase()
-    let win = enteredWord.toUpperCase() === wordOfDay
+function drawBox(container, row, col, letter = '') {
+  const box = document.createElement('div')
+  box.className = 'box'
+  box.id = `box${row}${col}`
+  box.textContent = letter
 
-    if (currentLetter !== 5) {
-      rows[currentRow].classList.add('shake')
-      setTimeout(() => {
-        rows[currentRow].classList.add('shake')
-      }, 500)
+  container.appendChild(box)
+  return box
+}
+
+function drawGrid(container) {
+  const grid = document.createElement('div')
+  grid.className = 'grid'
+
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 5; j++) {
+      drawBox(grid, i, j)
+    }
+  }
+  container.appendChild(grid)
+}
+
+function statusMessage() {
+  mainContainer.appendChild(message)
+  setTimeout(() => {
+    message.remove()
+  }, 5000)
+}
+
+function registeKeyBoardEvents() {
+  document.body.onkeydown = (e) => {
+    if (state.gameOver) return
+    const key = e.key
+
+    if (key === 'Enter') {
+      if (state.currentCol === 5) {
+        const word = getCurrentWord()
+        if (isWordValid(word)) {
+          revealWord(word)
+          state.currentRow++
+          state.currentCol = 0
+        } else {
+          statusMessage()
+          message.textContent = `${word.toUpperCase()} is not on a word list`
+        }
+      }
     }
 
-    if (win) {
-      statusElement.innerHTML = 'Amazing!'
-      mainContainer.appendChild(statusElement)
-      rows[currentRow].classList.add('success')
-      setTimeout(() => {
-        statusElement.remove()
-      }, 5000)
-      return
+    if (key === 'Backspace') {
+      removeLetter()
+    }
+
+    if (isLetter(key)) {
+      addLetter(key)
+    }
+
+    updateGrid()
+  }
+}
+
+function getCurrentWord() {
+  return state.grid[state.currentRow].reduce((prev, curr) => prev + curr)
+}
+
+function isWordValid(word) {
+  return dictionary.includes(word)
+}
+
+function revealWord(guess) {
+  const row = state.currentRow
+
+  for (let i = 0; i < 5; i++) {
+    const box = document.getElementById(`box${row}${i}`)
+    const letter = box.textContent
+
+    if (letter === state.secret[i]) {
+      box.classList.add('right')
+    } else if (state.secret.includes(letter)) {
+      box.classList.add('wrong')
     } else {
-      currentRow++
-      currentLetter = 0
-      entries = []
+      box.classList.add('empty')
     }
   }
 
-  //Delete letters
-  if (currentLetter > 0) {
-    if (e.key === 'Backspace') {
-      currentLetter--
-      letters[currentLetter].innerHTML = ''
-      entries.pop()
-    }
+  const isWinner = state.secret === guess
+  const isGameOver = state.currentRow === 5
+
+  if (isWinner) {
+    statusMessage()
+    message.textContent = 'Amazing!'
+    state.gameOver = true
+    resetGame()
+  } else if (isGameOver) {
+    statusMessage()
+    state.gameOver = true
+    message.textContent = `Correct word is ${state.secret.toUpperCase()}. Better luck next time!`
+    resetGame()
   }
 }
 
-for (let i = 0; i < keyboardLetters.length; i++) {
-  keyboardLetters[i].addEventListener('click', function () {
-    pressedKeyboard = keyboardLetters[i].innerHTML
-    keyboardAttr = keyboardLetters[i].setAttribute('data-pressed', pressedKeyboard)
-    console.log('hi', pressedKeyboard)
-
-    if (keyboardLetters[i] === backspaceBtn) {
-      console.log('backspace button clicked')
-    }
-
-    if (keyboardLetters[i] === enterBtn) {
-      console.log('enter button clicked')
-    }
-  })
+function isLetter(key) {
+  return key.length === 1 && key.match(/[a-z]/i)
 }
+
+function addLetter(letter) {
+  if (state.currentCol === 5) return
+  state.grid[state.currentRow][state.currentCol] = letter
+  state.currentCol++
+}
+
+function removeLetter() {
+  if (state.currentCol === 0) return
+  state.grid[state.currentRow][state.currentCol - 1] = ''
+  state.currentCol--
+}
+
+function newGame() {
+  state.secret = dictionary[Math.floor(Math.random() * dictionary.length)]
+  state.grid = Array(6)
+    .fill()
+    .map(() => Array(5).fill(''))
+  state.currentRow = 0
+  state.currentCol = 0
+  state.gameOver = false
+  const grid = document.querySelector('.grid')
+  if (grid) grid.remove()
+  btn.remove()
+  if (message) {
+    message.remove()
+  }
+  startUp()
+}
+
+function resetGame() {
+  mainContainer.appendChild(btn)
+  btn.className = 'reload-btn'
+  btn.innerHTML = `<span> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3C14.1231 3.00003 16.1778 3.7506 17.8009 5.11905C19.4241 6.48749 20.5113 8.3857 20.8703 10.4782C21.2292 12.5707 20.8369 14.7227 19.7627 16.5539C18.6885 18.3851 17.0014 19.7776 14.9998 20.4853C12.9981 21.193 10.8108 21.1702 8.82427 20.4211C6.83776 19.672 5.18003 18.2448 4.14406 16.3916C3.1081 14.5385 2.7606 12.3788 3.16298 10.2942C3.56537 8.20964 4.69174 6.33442 6.343 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3 4.5H7V8.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    </span>`
+  btn.addEventListener('click', newGame)
+}
+
+function startUp() {
+  const game = document.getElementById('game')
+  drawGrid(game)
+  registeKeyBoardEvents()
+  console.log(state.secret)
+}
+
+startUp()
