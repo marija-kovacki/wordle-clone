@@ -190,7 +190,6 @@ function startUp() {
   const game = document.getElementById('game')
   drawGrid(game)
   registeKeyBoardEvents()
-  console.log(state.secret)
 }
 
 startUp()
