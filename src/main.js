@@ -112,16 +112,33 @@ function isWordValid(word) {
 
 function revealWord(guess) {
   const row = state.currentRow
+  const secret = state.secret.split('')
+  const guessArray = guess.split('')
+  const letterCount = {}
+
+  for (let char of secret) {
+    letterCount[char] = (letterCount[char] || 0) + 1
+  }
 
   for (let i = 0; i < 5; i++) {
     const box = document.getElementById(`box${row}${i}`)
-    const letter = box.textContent
+    const letter = guessArray[i]
 
-    if (letter === state.secret[i]) {
+    if (letter === secret[i]) {
       box.classList.add('right')
-    } else if (state.secret.includes(letter)) {
+      letterCount[letter]--
+      guessArray[i] = null
+    }
+  }
+
+  for (let i = 0; i < 5; i++) {
+    const box = document.getElementById(`box${row}${i}`)
+    const letter = guessArray[i]
+
+    if (letter && letterCount[letter] > 0) {
       box.classList.add('wrong')
-    } else {
+      letterCount[letter]--
+    } else if (letter) {
       box.classList.add('empty')
     }
   }
@@ -130,14 +147,14 @@ function revealWord(guess) {
   const isGameOver = state.currentRow === 5
 
   if (isWinner) {
-    statusMessage()
     message.textContent = 'Amazing!'
+    statusMessage()
     state.gameOver = true
     resetGame()
   } else if (isGameOver) {
+    message.textContent = `Correct word is ${state.secret.toUpperCase()}. Better luck next time!`
     statusMessage()
     state.gameOver = true
-    message.textContent = `Correct word is ${state.secret.toUpperCase()}. Better luck next time!`
     resetGame()
   }
 }
