@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/src/w-favicon.png" />
+    <title>Wordle replica</title>
+  </head>
+  <body>
+    <main id="app" role="application" aria-label="Wordle game">
+      <div class="Modal"></div>
+      <h1>
+        Welcome to Wordle replica <br />
+        (a practice project)
+      </h1>
+      <div class="row">
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+      </div>
+      <div class="row">
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+      </div>
+      <div class="row">
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+      </div>
+      <div class="row">
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+      </div>
+      <div class="row">
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+        <div class="letter"></div>
+      </div>
+      <div class="keyboard">
+        <div class="keyboard_row">
+          <div class="keyboard_letter">Q</div>
+          <div class="keyboard_letter">W</div>
+          <div class="keyboard_letter">E</div>
+          <div class="keyboard_letter">R</div>
+          <div class="keyboard_letter">T</div>
+          <div class="keyboard_letter">Y</div>
+          <div class="keyboard_letter">U</div>
+          <div class="keyboard_letter">I</div>
+          <div class="keyboard_letter">O</div>
+          <div class="keyboard_letter">P</div>
+        </div>
+        <div class="keyboard_row">
+          <div class="keyboard_letter">A</div>
+          <div class="keyboard_letter">S</div>
+          <div class="keyboard_letter">D</div>
+          <div class="keyboard_letter">F</div>
+          <div class="keyboard_letter">G</div>
+          <div class="keyboard_letter">H</div>
+          <div class="keyboard_letter">J</div>
+          <div class="keyboard_letter">K</div>
+          <div class="keyboard_letter">L</div>
+        </div>
+        <div class="keyboard_row">
+          <div id="enter" class="keyboard_letter enter-btn" role="button">enter</div>
+          <div class="keyboard_letter">Z</div>
+          <div class="keyboard_letter">X</div>
+          <div class="keyboard_letter">C</div>
+          <div class="keyboard_letter">V</div>
+          <div class="keyboard_letter">B</div>
+          <div class="keyboard_letter">N</div>
+          <div class="keyboard_letter">M</div>
+          <div id="backspace" class="keyboard_letter bckspc-btn" role="button">
+            <svg viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M9.4 12L12 9.4L14.6 12L16 10.6L13.4 8L16 5.4L14.6 4L12 6.6L9.4 4L8 5.4L10.6 8L8 10.6L9.4 12ZM7 16C6.68333 16 6.38333 15.929 6.1 15.787C5.81667 15.645 5.58333 15.4493 5.4 15.2L0 8L5.4 0.8C5.58333 0.55 5.81667 0.354333 6.1 0.213C6.38333 0.0716665 6.68333 0.000666667 7 0H18C18.55 0 19.021 0.195667 19.413 0.587C19.805 0.978333 20.0007 1.44933 20 2V14C20 14.55 19.8043 15.021 19.413 15.413C19.0217 15.805 18.5507 16.0007 18 16H7ZM2.5 8L7 14H18V2H7L2.5 8Z"
+                fill="#090a11"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div id="w-timer">
+        <span id="timer">00:00</span>
+      </div> -->
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
