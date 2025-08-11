@@ -11,7 +11,7 @@
       <div class="dark-overlay"></div>
       <div class="modal">
         <div class="modal_header">
-          <h1>Instructions:</h1>
+          <h2>Instructions:</h2>
           <span class="close-btn">&#x2715;</span>
         </div>
         <div class="modal_ins">
@@ -24,7 +24,57 @@
           <span class="box empty">C</span>Letter does not exist in this word.
         </div>
       </div>
+      <h1>Wordle game</h1>
       <div id="game"></div>
+      <div id="keyboard">
+        <div class="keyboard-row">
+          <div class="keyboard-letter">q</div>
+          <div class="keyboard-letter">w</div>
+          <div class="keyboard-letter">e</div>
+          <div class="keyboard-letter">r</div>
+          <div class="keyboard-letter">t</div>
+          <div class="keyboard-letter">y</div>
+          <div class="keyboard-letter">u</div>
+          <div class="keyboard-letter">i</div>
+          <div class="keyboard-letter">o</div>
+          <div class="keyboard-letter">p</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="keyboard-letter">a</div>
+          <div class="keyboard-letter">s</div>
+          <div class="keyboard-letter">d</div>
+          <div class="keyboard-letter">f</div>
+          <div class="keyboard-letter">g</div>
+          <div class="keyboard-letter">h</div>
+          <div class="keyboard-letter">j</div>
+          <div class="keyboard-letter">k</div>
+          <div class="keyboard-letter">l</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="keyboard-letter enter">ENTER</div>
+          <div class="keyboard-letter">z</div>
+          <div class="keyboard-letter">x</div>
+          <div class="keyboard-letter">c</div>
+          <div class="keyboard-letter">v</div>
+          <div class="keyboard-letter">b</div>
+          <div class="keyboard-letter">n</div>
+          <div class="keyboard-letter">m</div>
+          <div class="keyboard-letter backspace">
+            <svg
+              width="20"
+              height="16"
+              viewBox="0 0 20 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.4 12L12 9.4L14.6 12L16 10.6L13.4 8L16 5.4L14.6 4L12 6.6L9.4 4L8 5.4L10.6 8L8 10.6L9.4 12ZM7 16C6.68333 16 6.38333 15.929 6.1 15.787C5.81667 15.645 5.58333 15.4493 5.4 15.2L0 8L5.4 0.8C5.58333 0.55 5.81667 0.354333 6.1 0.213C6.38333 0.0716665 6.68333 0.000666667 7 0H18C18.55 0 19.021 0.195667 19.413 0.587C19.805 0.978333 20.0007 1.44933 20 2V14C20 14.55 19.8043 15.021 19.413 15.413C19.0217 15.805 18.5507 16.0007 18 16H7ZM2.5 8L7 14H18V2H7L2.5 8Z"
+                fill="black"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>

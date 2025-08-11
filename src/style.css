@@ -22,6 +22,14 @@ main {
   position: relative;
 }
 
+h1 {
+  margin: 0;
+  padding: 40px 0 0;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+
 .modal {
   position: fixed;
   top: 10%;
@@ -52,7 +60,7 @@ main {
   gap: 10px;
 }
 
-.modal_header h1 {
+.modal_header h2 {
   font-size: 16px;
   margin-bottom: 20px;
 }
@@ -77,9 +85,11 @@ main {
 
 #game {
   display: grid;
-  place-items: center;
-  height: 600px;
+  align-items: baseline;
+  justify-content: space-evenly;
+  height: 450px;
   width: 100%;
+  margin-top: 5%;
 }
 
 .grid {
@@ -99,15 +109,18 @@ main {
   place-items: center;
 }
 
-.box.empty {
+.box.empty,
+.keyboard-letter.empty {
   background: var(--empty);
 }
 
-.box.wrong {
+.box.wrong,
+.keyboard-letter.wrong {
   background: var(--wrong);
 }
 
-.box.right {
+.box.right,
+.keyboard-letter.right {
   background: var(--right);
 }
 
@@ -121,4 +134,32 @@ main {
   border: 1px solid white;
   background: rgb(69, 70, 7);
   cursor: pointer;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.keyboard-letter {
+  background-color: white;
+  width: 50px;
+  height: 50px;
+  font-size: 14px;
+  line-height: 3.5;
+  border-radius: 4px;
+  border: 1px solid var(--default);
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.enter,
+.backspace {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
 }

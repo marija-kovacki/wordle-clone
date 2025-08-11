@@ -5,6 +5,7 @@ const message = document.createElement('div')
 message.className = 'game-msg'
 const mainContainer = document.getElementById('app')
 const btn = document.createElement('button')
+let keyboardLetters = document.querySelectorAll('.keyboard-letter:not(.enter):not(.backspace)')
 
 function handleModal() {
   let overlay = document.querySelector('.dark-overlay')
@@ -20,7 +21,6 @@ function handleModal() {
     })
   )
 }
-
 handleModal()
 
 const state = {
@@ -31,6 +31,7 @@ const state = {
   currentRow: 0,
   currentCol: 0,
   gameOver: false,
+  clicksWired: false,
 }
 
 function updateGrid() {
@@ -71,23 +72,53 @@ function statusMessage() {
   }, 5000)
 }
 
+function handleEnter() {
+  if (state.currentCol === 5) {
+    const word = getCurrentWord()
+    if (isWordValid(word)) {
+      revealWord(word)
+      state.currentRow++
+      state.currentCol = 0
+    } else {
+      statusMessage()
+      message.textContent = `${word.toUpperCase()} is not on a word list`
+    }
+  }
+}
+
+function registerClickEvents() {
+  if (state.clicksWired) return
+  state.clicksWired = true
+  document.querySelector('.enter').addEventListener('click', function () {
+    if (state.gameOver) return
+
+    handleEnter()
+    updateGrid()
+  })
+
+  document.querySelector('.backspace').addEventListener('click', function () {
+    if (state.gameOver) return
+
+    removeLetter()
+    updateGrid()
+  })
+
+  document.querySelector('#keyboard').addEventListener('click', (e) => {
+    if (state.gameOver) return
+    const key = e.target.closest('.keyboard-letter')
+    if (!key || key.classList.contains('enter') || key.classList.contains('backspace')) return
+    addLetter(key.innerHTML)
+    updateGrid()
+  })
+}
+
 function registeKeyBoardEvents() {
   document.body.onkeydown = (e) => {
     if (state.gameOver) return
     const key = e.key
 
     if (key === 'Enter') {
-      if (state.currentCol === 5) {
-        const word = getCurrentWord()
-        if (isWordValid(word)) {
-          revealWord(word)
-          state.currentRow++
-          state.currentCol = 0
-        } else {
-          statusMessage()
-          message.textContent = `${word.toUpperCase()} is not on a word list`
-        }
-      }
+      handleEnter()
     }
 
     if (key === 'Backspace') {
@@ -126,6 +157,11 @@ function revealWord(guess) {
 
     if (letter === secret[i]) {
       box.classList.add('right')
+      keyboardLetters.forEach((key) => {
+        if (key.innerHTML === letter) {
+          key.classList.add('right')
+        }
+      })
       letterCount[letter]--
       guessArray[i] = null
     }
@@ -137,8 +173,18 @@ function revealWord(guess) {
 
     if (letter && letterCount[letter] > 0) {
       box.classList.add('wrong')
+      keyboardLetters.forEach((key) => {
+        if (key.innerHTML === letter) {
+          key.classList.add('wrong')
+        }
+      })
       letterCount[letter]--
     } else if (letter) {
+      keyboardLetters.forEach((key) => {
+        if (key.innerHTML === letter) {
+          key.classList.add('empty')
+        }
+      })
       box.classList.add('empty')
     }
   }
@@ -189,6 +235,18 @@ function newGame() {
   if (message) {
     message.remove()
   }
+
+  keyboardLetters.forEach((key) => {
+    if (
+      key.classList.contains('empty') ||
+      key.classList.contains('wrong') ||
+      key.classList.contains('right')
+    ) {
+      key.classList.remove('empty')
+      key.classList.remove('wrong')
+      key.classList.remove('right')
+    }
+  })
   startUp()
 }
 
@@ -207,6 +265,7 @@ function startUp() {
   const game = document.getElementById('game')
   drawGrid(game)
   registeKeyBoardEvents()
+  registerClickEvents()
 }
 
 startUp()
